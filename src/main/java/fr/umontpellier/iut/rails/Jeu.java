@@ -191,6 +191,15 @@ public class Jeu implements Runnable {
     }
 
     /**
+     * Calcule les scores des joueurs à la fin de la partie
+     *
+     * @return une liste d'entiers, le ième entier étant le score du ième joueur
+     */
+    public List<Integer> calculerLesScores() {
+        throw new RuntimeException("Méthode non implémentée !");
+    }
+
+    /**
      * Ajoute une carte wagon dans la pile de défausse
      *
      * @param c carte à défausser
