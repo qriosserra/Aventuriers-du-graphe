@@ -102,6 +102,15 @@ public class Joueur {
     }
 
     /**
+    * Met à jour le score du joueur
+    *
+    * @param n
+    */
+    public void setScore(int n) {
+        throw new RuntimeException("Méthode non implémentée !");
+    }
+
+    /**
      * Teste si le joueur a une carte wagon de la couleur passée en argument
      * 
      * @param c une couleur de carte wagon
