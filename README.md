@@ -40,7 +40,7 @@ Afin d'atteindre ce but, on vous propose de suivre les étapes suivantes :
 
 ## Architecture du code
 
-Le code qui vous est fourni contient la correction du projet correspondant à la [Phase 1 du projet _Aventuriers du Rail (Europe)_](https://gitlabinfo.iutmontp.univ-montp2.fr/dev-objets/aventuriers-du-rail). La mécanique du jeu est restée intacte dans le paquetage `fr.umontpellier.iut.rails`. La seule chose qui a été changé, c'est l'ajout de la méthode `calculerLesScores()` dans la classe `Jeu`. Elle est à implémenter.
+Le code qui vous est fourni contient la correction du projet correspondant à la [Phase 1 du projet _Aventuriers du Rail (Europe)_](https://gitlabinfo.iutmontp.univ-montp2.fr/dev-objets/aventuriers-du-rail). La mécanique du jeu est restée intacte dans le paquetage `fr.umontpellier.iut.rails`. La seule chose qui a été changée, c'est l'ajout de la méthode `calculerLesScores()` dans la classe `Jeu` qui utilisera la méthode `setScore(int n)` de la classe `Joueur`. Elles sont à implémenter.
 
 Les autres méthodes à implémenter, comme d'habitude, sont celles qui lèvent des exceptions de type `RuntimeException` avec le message `"Méthode non implémentée !"`. La plupart, se trouvent toutes dans la classe `Graphe` du paquetage `fr.umontpellier.iut.graphes`. Dans cette classe, les méthodes suivantes vous sont fournies :
 * Le constructeur `Graphe(int n)` qui crée un graphe vide à `n` sommets
