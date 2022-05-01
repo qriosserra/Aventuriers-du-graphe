@@ -102,10 +102,10 @@ public class Joueur {
     }
 
     /**
-    * Met à jour le score du joueur
-    *
-    * @param n
-    */
+     * Met à jour le score du joueur
+     * 
+     * @param n
+     */
     public void setScore(int n) {
         throw new RuntimeException("Méthode non implémentée !");
     }
