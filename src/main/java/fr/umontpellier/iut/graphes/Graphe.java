@@ -33,22 +33,21 @@ public class Graphe {
 
     /**
      * Supprime l'arête entre les sommets i et j
+     *
      * @param i un entier représentant un sommet
      * @param j un autre entier représentant un sommet
      */
-    public void supprimeArete(int i, int j) {
+    public void supprimerArete(int i, int j) {
         mat[i][j] = 0;
         mat[j][i] = 0;
     }
 
     /**
-     *
      * @param i un entier représentant un sommet
      * @param j un autre entier représentant un sommet
      * @param k la distance entre i et j (k>0)
      */
-    public void ajoutArete(int i, int j, int k) {
-
+    public void ajouterArete(int i, int j, int k) {
         mat[i][j] = k;
         mat[j][i] = k;
     }
@@ -69,7 +68,6 @@ public class Graphe {
     }
 
     /**
-     *
      * @param i un entier représentant un sommet
      * @param j un autre entier représentant un sommet
      * @return vrai s'il existe une arête entre i et j, faux sinon
@@ -103,17 +101,18 @@ public class Graphe {
 
     /**
      * Calcule la classe de connexité du sommet v
+     *
      * @param v un entier représentant un sommet
      * @return une liste d'entiers représentant les sommets de la classe de connexité de v
      */
-    public ArrayList<Integer> calculeClasseDeConnexite(int v) {
+    public ArrayList<Integer> calculerClasseDeConnexite(int v) {
         throw new RuntimeException("Méthode non implémentée !");
     }
 
     /**
      * @return la liste des classes de connexité du graphe
      */
-    public ArrayList<ArrayList<Integer>> calculeClassesDeConnexite() {
+    public ArrayList<ArrayList<Integer>> calculerClassesDeConnexite() {
         throw new RuntimeException("Méthode non implémentée !");
     }
 
@@ -121,7 +120,7 @@ public class Graphe {
      * @return le nombre de classes de connexité
      */
     public int nbCC() {
-        return calculeClassesDeConnexite().size();
+        return calculerClassesDeConnexite().size();
     }
 
     /**

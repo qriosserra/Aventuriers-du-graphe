@@ -1,20 +1,12 @@
 package fr.umontpellier.iut.rails;
 
-import java.util.AbstractMap;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.StringJoiner;
+import com.google.gson.Gson;
+import fr.umontpellier.iut.gui.GameServer;
+
+import java.util.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.stream.Collectors;
-
-import com.google.gson.Gson;
-
-import fr.umontpellier.iut.gui.GameServer;
 
 public class Jeu implements Runnable {
     /**
@@ -242,9 +234,9 @@ public class Jeu implements Runnable {
 
     /**
      * Pioche et renvoie la destination du dessus de la pile de destinations.
-     * 
+     *
      * @return la destination qui a été piochée (ou `null` si aucune destination
-     *         disponible)
+     * disponible)
      */
     public Destination piocherDestination() {
         if (pileDestinations.isEmpty())
@@ -277,11 +269,11 @@ public class Jeu implements Runnable {
     /**
      * Révèle des cartes wagon de la pioche jusqu'à ce qu'il y ait 5 cartes visibles
      * (ou plus aucune carte disponible à piocher).
-     * 
+     * <p>
      * Après avoir retourné 5 cartes, si au moins 3 des 5 cartes retournées sont des
      * locomotives, les 5 cartes sont défaussées et 5 nouvelles cartes sont
      * piochées.
-     * 
+     * <p>
      * Remarque: pour éviter les boucles infinies, s'il y a 3 locomotives
      * retournées on ne mélange les cartes que s'il reste au moins 3 cartes qui ne
      * sont pas des locomotives dans la pioche, la défausse et les cartes révélées)
@@ -329,7 +321,7 @@ public class Jeu implements Runnable {
      * l'entrée clavier de l'utilisateur (par exemple dans {@code Player.choisir})
      *
      * @return une chaîne de caractères correspondant à l'entrée suivante dans la
-     *         file
+     * file
      */
     public String lireLigne() {
         try {

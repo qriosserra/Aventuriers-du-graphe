@@ -15,7 +15,7 @@ public class GrapheTest {
     private static Graphe buildGraphe(int n, int[][] aretes){
         Graphe res = new Graphe(n);
         for(int i=0;i<aretes.length;i++){
-            res.ajoutArete(aretes[i][0],aretes[i][1],aretes[i][2]);
+            res.ajouterArete(aretes[i][0],aretes[i][1],aretes[i][2]);
         }
         return res;
     }
@@ -23,7 +23,7 @@ public class GrapheTest {
     @Test
     void testCCdeV() {
         Graphe g = buildGraphe(4,new int[][]{{0,1,1},{2,3,1}});
-        ArrayList<Integer> res = g.calculeClasseDeConnexite(2);
+        ArrayList<Integer> res = g.calculerClasseDeConnexite(2);
         //conversion en set pour que le equals ci-dessous soit bien une égalité de set et pas une égalité d'arrayList (qui tiendrait compte de l'ordre)
         HashSet<Integer> resSet = new HashSet<>(res);
 
@@ -39,7 +39,7 @@ public class GrapheTest {
     @Test
     void testCC() {
         Graphe g = buildGraphe(4,new int[][]{{0,1,1},{2,3,1}});
-        ArrayList<ArrayList<Integer>> res = g.calculeClassesDeConnexite();
+        ArrayList<ArrayList<Integer>> res = g.calculerClassesDeConnexite();
         //conversion en set pour que le equals ci-dessous soit bien une égalité de set et pas une égalité d'arrayList (qui tiendrait compte de l'ordre)
         HashSet<HashSet<Integer>> resSet = new HashSet<>();
         for(ArrayList<Integer> cc : res){
@@ -65,7 +65,7 @@ public class GrapheTest {
     @Test
     void testCCPlusDur() {
         Graphe g = buildGraphe(4,new int[][]{{2,3,1},{2,1,1},{1,3,1}});
-        ArrayList<ArrayList<Integer>> res = g.calculeClassesDeConnexite();
+        ArrayList<ArrayList<Integer>> res = g.calculerClassesDeConnexite();
         System.out.println(res);
     }
 

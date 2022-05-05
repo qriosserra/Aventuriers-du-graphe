@@ -1,13 +1,6 @@
 package fr.umontpellier.iut.rails;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.StringJoiner;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Joueur {
@@ -103,7 +96,7 @@ public class Joueur {
 
     /**
      * Met à jour le score du joueur
-     * 
+     *
      * @param n
      */
     public void setScore(int n) {
@@ -112,7 +105,7 @@ public class Joueur {
 
     /**
      * Teste si le joueur a une carte wagon de la couleur passée en argument
-     * 
+     *
      * @param c une couleur de carte wagon
      * @return true si le joueur a une carte de la couleur indiquée
      */
@@ -122,7 +115,7 @@ public class Joueur {
 
     /**
      * Déplace une carte wagon de la main du joueur vers sa pile de cartes posées
-     * 
+     *
      * @param c
      */
     public void poserCarteWagon(CouleurWagon c) {
@@ -153,37 +146,36 @@ public class Joueur {
     /**
      * Attend une entrée de la part du joueur (au clavier ou sur la websocket) et
      * renvoie le choix du joueur.
-     * 
+     * <p>
      * Cette méthode lit les entrées du jeu ({@code Jeu.lireligne()}) jusqu'à ce
      * qu'un choix valide (un élément de {@code choix} ou de {@code boutons} ou
      * éventuellement la chaîne vide si l'utilisateur est autorisé à passer) soit
      * reçu.
      * Lorsqu'un choix valide est obtenu, il est renvoyé par la fonction.
-     * 
+     * <p>
      * Si l'ensemble des choix valides ({@code choix} + {@code boutons}) ne comporte
      * qu'un seul élément et que {@code canPass} est faux, l'unique choix valide est
      * automatiquement renvoyé sans lire l'entrée de l'utilisateur.
-     * 
+     * <p>
      * Si l'ensemble des choix est vide, la chaîne vide ("") est automatiquement
      * renvoyée par la méthode (indépendamment de la valeur de {@code canPass}).
-     * 
+     * <p>
      * Exemple d'utilisation pour demander à un joueur de répondre à une question
      * par "oui" ou "non" :
-     * 
+     * <p>
      * {@code
      * List<String> choix = Arrays.asList("Oui", "Non");
      * String input = choisir("Voulez vous faire ceci ?", choix, new ArrayList<>(), false);
      * }
-     * 
-     * 
+     * <p>
+     * <p>
      * Si par contre on voulait proposer les réponses à l'aide de boutons, on
      * pourrait utiliser :
-     * 
+     * <p>
      * {@code
      * List<String> boutons = Arrays.asList("1", "2", "3");
      * String input = choisir("Choisissez un nombre.", new ArrayList<>(), boutons, false);
      * }
-     * 
      *
      * @param instruction message à afficher à l'écran pour indiquer au joueur la
      *                    nature du choix qui est attendu
@@ -197,10 +189,10 @@ public class Joueur {
      *                    chaîne de caractères vide ("") qui signifie qu'il désire
      *                    passer.
      * @return le choix de l'utilisateur (un élement de {@code choix}, ou de
-     *         {@code boutons} ou la chaîne vide)
+     * {@code boutons} ou la chaîne vide)
      */
     public String choisir(String instruction, Collection<String> choix, Collection<String> boutons,
-            boolean peutPasser) {
+                          boolean peutPasser) {
         // on retire les doublons de la liste des choix
         HashSet<String> choixDistincts = new HashSet<>();
         choixDistincts.addAll(choix);
@@ -238,7 +230,7 @@ public class Joueur {
 
     /**
      * Affiche un message dans le log du jeu (visible sur l'interface graphique)
-     * 
+     *
      * @param message le message à afficher (peut contenir des balises html pour la
      *                mise en forme)
      */
@@ -259,7 +251,7 @@ public class Joueur {
 
     /**
      * @return une chaîne de caractères contenant le nom du joueur, avec des balises
-     *         HTML pour être mis en forme dans le log
+     * HTML pour être mis en forme dans le log
      */
     public String toLog() {
         return String.format("<span class=\"joueur\">%s</span>", nom);
@@ -287,15 +279,15 @@ public class Joueur {
     /**
      * Propose une liste de cartes destinations, parmi lesquelles le joueur doit en
      * garder un nombre minimum n.
-     * 
+     * <p>
      * Tant que le nombre de destinations proposées est strictement supérieur à n,
      * le joueur peut choisir une des destinations qu'il retire de la liste des
      * choix, ou passer (en renvoyant la chaîne de caractères vide).
-     * 
+     * <p>
      * Les destinations qui ne sont pas écartées sont ajoutées à la liste des
      * destinations du joueur. Les destinations écartées sont renvoyées par la
      * fonction.
-     * 
+     *
      * @param destinationsPossibles liste de destinations proposées parmi lesquelles
      *                              le joueur peut choisir d'en écarter certaines
      * @param n                     nombre minimum de destinations que le joueur
@@ -336,7 +328,7 @@ public class Joueur {
 
     /**
      * Exécute un tour de jeu du joueur.
-     * 
+     * <p>
      * Cette méthode attend que le joueur choisisse une des options suivantes :
      * - le nom d'une carte wagon face visible à prendre ;
      * - le nom "GRIS" pour piocher une carte wagon face cachée s'il reste des
@@ -348,7 +340,7 @@ public class Joueur {
      * - le nom d'une route que le joueur peut capturer (pas déjà capturée, assez de
      * wagons et assez de cartes wagon) ;
      * - la chaîne de caractères vide pour passer son tour
-     * 
+     * <p>
      * Lorsqu'un choix valide est reçu, l'action est exécutée (il est possible que
      * l'action nécessite d'autres choix de la part de l'utilisateur, comme par
      * exemple choisit les cartes wagon à défausser pour capturer une route ou
@@ -409,7 +401,7 @@ public class Joueur {
 
     /**
      * Exécute l'action "prendre des cartes wagon" pendant le tour d'un joueur
-     * 
+     *
      * @param couleur couleur de la première carte à prendre (GRIS si la première
      *                carte est prise dans la pioche)
      */
@@ -454,15 +446,15 @@ public class Joueur {
     /**
      * Détermine si le joueur a suffisamment de cartes wagon en main pour payer le
      * prix indiqué en paramètres.
-     * 
+     * <p>
      * Exemple 1: pour déterminer si un joueur peut construire un ferry d'une
      * longueur totale de 5 qui nécessite 1 locomotive, il faut appeler
      * {@code peutPayerCartesWagon(4, Couleur.GRIS, 1)}
-     * 
+     * <p>
      * Exemple 2: pour déterminer si un joueur peut construire une route verte de
      * longueur 3, il faut appeler
      * {@code peutPayerCartesWagon(3, Couleur.VERT, 0)}
-     * 
+     *
      * @param nbCouleur     nombre de cartes demandées de la couleur indiquée
      * @param couleur       couleur demandée
      * @param nbLocomotives nombre de locomotives supplémentaires demandées
@@ -479,15 +471,15 @@ public class Joueur {
      * le prix indiqué en paramètre.
      * Les cartes choisies par le joueur sont placées dans la liste
      * {@code cartesWagonPosees} au fur et à mesure.
-     * 
+     * <p>
      * Prérequis: le joueur peut payer le cout total demandé
-     * 
+     *
      * @param nbCouleur
      * @param couleur
      * @param nbLocomotives
      */
     public List<CouleurWagon> payerCartesWagon(int nbCouleur, CouleurWagon couleur, int nbLocomotives,
-            String instruction) {
+                                               String instruction) {
         // Payer les locomotives en premier
         for (int i = 0; i < nbLocomotives; i++) {
             cartesWagon.remove(CouleurWagon.LOCOMOTIVE);
@@ -536,16 +528,16 @@ public class Joueur {
 
     /**
      * Cette méthode est appelée lorsque le joueur demande la capture d'une route.
-     * 
+     * <p>
      * Le joueur doit choisir les cartes wagon à défausser pour la capture de la
      * route puis :
      * - le joueur est marqué comme propriétaire de la route ;
      * - le score du joueur est augmenté de la valeur de la route ;
      * - le nombre de wagons du joueur est décrémenté de la longueur de la route.
-     * 
+     * <p>
      * Pré-requis : le joueur peut capturer la route (la route est disponible et le
      * joueur a les cartes wagon nécessaires)
-     * 
+     *
      * @param route la route à capturer
      */
     private void capturerRoute(Route route) {
@@ -567,7 +559,7 @@ public class Joueur {
     /**
      * Cette méthode est appelée quand le joueur choisit de piocher une ou plusieurs
      * cartes destination.
-     * 
+     * <p>
      * Le joueur doit choisir les cartes destinations qu'il souhaite défausser parmi
      * celles qui sont retournées. Les cartes qui ne sont pas gardées sont replacées
      * en bas de la pioche de destinations.
@@ -590,16 +582,16 @@ public class Joueur {
     /**
      * Cette méthode est appelée lorsque le joueur choisit de construire une gare
      * sur une ville.
-     * 
+     * <p>
      * Le joueur doit choisir les cartes wagon à défausser pour construire la gare
      * puis :
      * - le joueur est marqué comme propriétaire de la gare ;
      * - le score du joueur est décrémenté de 4 ;
      * - le nombre de gares disponibles du joueur est décrémenté de 1.
-     * 
+     * <p>
      * Pré-requis : le joueur peut construire la gare (pas de gare sur la ville,
      * assez de gares en réserve et de cartes wagon)
-     * 
+     *
      * @param ville la ville sur laquelle construire la gare
      */
     private void construireGare(Ville ville) {
