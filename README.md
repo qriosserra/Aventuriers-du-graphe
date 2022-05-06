@@ -51,7 +51,7 @@ Les autres méthodes à implémenter, comme d'habitude, sont celles qui lèvent 
 
 ## Calendrier de travail
 * **Phase 2 : _mise en œuvre des algorithmes de graphes afin de calculer les scores et définir des stratégies de jeu pour les joueurs_**
-  * **Période (prévisionnelle) :** avril-mai 2022
+  * **Période (prévisionnelle) :** mai-début juin 2022
   * **Cours concerné** : _Graphes_
   * **Enseignants :**
       [Alexandre Bazin](mailto:alexandre.bazin@umontpellier.fr),
