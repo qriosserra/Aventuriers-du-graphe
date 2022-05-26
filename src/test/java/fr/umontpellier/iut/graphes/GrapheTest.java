@@ -1,6 +1,4 @@
 package fr.umontpellier.iut.graphes;
-
-
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -11,10 +9,12 @@ import static org.junit.jupiter.api.Assertions.*;
 public class GrapheTest {
 
     //ajouter controle des exceptions et boucles infinies
+    private static Graphe buildGraphe (int n, int[][] aretes) {
 
-    private static Graphe buildGraphe(int n, int[][] aretes){
         Graphe res = new Graphe(n);
-        for(int i=0;i<aretes.length;i++){
+
+        for (int i = 0; i < aretes.length; i++) {
+
             res.ajouterArete(aretes[i][0],aretes[i][1],aretes[i][2]);
         }
         return res;
@@ -30,8 +30,6 @@ public class GrapheTest {
         HashSet<Integer> answer = new HashSet<>();
         answer.add(3);
         answer.add(2);
-
-
 
         assertEquals(resSet, answer);
     }
@@ -91,7 +89,6 @@ public class GrapheTest {
         assertEquals(g.plusLongChemin(),L);
     }
 
-
     @Test
     void testExisteParcoursEulerien() {
         Graphe g = buildGraphe(5,new int[][]{{0,1,1},{1,2,1},{2,0,1},{1,3,1},{2,4,1}});
@@ -104,8 +101,4 @@ public class GrapheTest {
         Graphe g = buildGraphe( 13, new int[][]{{0,1,1},{1,2,1},{2,3,1},{2,4,1},{2,8,1},{4,5,1},{5,6,1},{5,7,1},{8,9,1},{8,10,1},{8,11,1},{11,12,1}});
         assertTrue(g.estUnArbre());
     }
-
-
-
-
 }
