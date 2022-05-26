@@ -1,5 +1,6 @@
-package fr.umontpellier.iut.graphes;
+package src.test.java.fr.umontpellier.iut.graphes;
 import org.junit.jupiter.api.Test;
+import src.main.java.fr.umontpellier.iut.graphes.Graphe;
 
 import java.util.ArrayList;
 import java.util.HashSet;

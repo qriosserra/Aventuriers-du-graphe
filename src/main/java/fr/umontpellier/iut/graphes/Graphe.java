@@ -1,4 +1,4 @@
-package fr.umontpellier.iut.graphes;
+package src.main.java.fr.umontpellier.iut.graphes;
 import java.util.ArrayList;
 
 public class Graphe {
@@ -122,25 +122,44 @@ public class Graphe {
 	 */
 	public ArrayList<Integer> calculerClasseDeConnexite(int v) { //Fait par Quentin
 
-		int sommet; //Le sommet qui sera traité dans la boucle
-		ArrayList<Integer> rouge = new ArrayList<>();   //La liste des sommets dont on a calculé les voisins, soit la classe de connexité à retourner
-		ArrayList<Integer> bleu = new ArrayList<>();    //La liste des sommets dont on a pas encore calculé les voisins
+		int sommet; //Sommet qui sera traité dans la boucle
+		ArrayList<Integer> classe = new ArrayList<>();   //Classe de connexitté à retourner
+		ArrayList<Integer> bleu = new ArrayList<>();    //Liste des sommets dont on a pas encore calculé les voisins
 		bleu.add(v);
 
 		while (!bleu.isEmpty()) {
 
 			sommet = bleu.remove(0);
 			bleu.addAll(voisins(sommet));
-			rouge.add(sommet);
+			classe.add(sommet);
 		}
+		return classe;
 	}
 
 	/**
 	 * @return la liste des classes de connexité du graphe
 	 */
-	public ArrayList<ArrayList<Integer>> calculerClassesDeConnexite() {
+	public ArrayList<ArrayList<Integer>> calculerClassesDeConnexite() { //Fait par Quentin
 
-		throw new RuntimeException("Méthode non implémentée !");
+		ArrayList<ArrayList<Integer>> classes = new ArrayList<>();  //Liste de classe de connexité à retourner
+		ArrayList<Integer> classeBleue = new ArrayList<>();         //Classe de connexité du graphe qui sera comparée dans la boucle
+
+		if (mat.length > 0) {   //Au cas où la matrice du graphe est vide
+
+			classes.get(0).addAll(calculerClasseDeConnexite(0));
+		}
+
+		for (int i = 0; i < classes.size(); i++) {
+
+			for (int sommet = 1; sommet < mat.length; sommet++) {   //Commence à 1 car la classe de 0 est déjà dans classes
+
+				if (!classes.get(i).contains((sommet))) {    //Si classes ne contient pas déjà le sommet
+
+					classes.get(i).addAll(calculerClasseDeConnexite(sommet));
+				}
+			}
+		}
+		return classes;
 	}
 
 	/**
@@ -187,5 +206,4 @@ public class Graphe {
 
 		throw new RuntimeException("Méthode non implémentée !");
 	}
-
 }
