@@ -99,7 +99,7 @@ public class Graphe {
 		for (int i = 0; i < mat.length; i++) {
 
 			//On parcourt la ligne v du tableau, rajoutant la colonne i quand on croise une valeur supérieur à 0
-			if (mat[v][i] > 0) voisins.add(i);
+			if (existeArete(v, i)) voisins.add(i);
 		}
 		return voisins;
 	}
@@ -193,7 +193,7 @@ public class Graphe {
 
 		copy.supprimerArete(u, v);
 
-		return copy.nbCC() > this.nbCC(); //Si l'arrête supprimée a créer une nouvelle classe de connexité
+		return copy.nbCC() > this.nbCC(); //Si l'arête supprimée a créé une nouvelle classe de connexité
 	}
 
 	public int[][] copy() { //Fait par Quentin (pour Graphe(int[][] mat))
@@ -227,13 +227,13 @@ public class Graphe {
 	 * <p>D'après le théorème d'Euler : Un graphe connexe admet une chaîne eulérienne si et seulement s'il possède zéro ou deux sommet(s) de degré impair. Un graphe connexe admet un cycle eulérien si et seulement s'il ne possède que des sommets de degré pair.
 	 * @return vrai s'il existe un parcours eulérien dans le graphe, faux sinon
 	 */
-	public boolean existeParcoursEulerien() { //Fait par Quentin (je suis pas trop sûr)
+	public boolean existeParcoursEulerien() { //Fait par Quentin (je suis pas trop sûr d'avoir correctement appliqué)
 
 		int oddCpt = 0; //Compte le nombre de sommet d'ordre impair, retourne vrai seulement si oddCpt ⊆ {0,2}
 
 		if (nbCC() == 1) {
 
-			for (int i = 1; i < mat.length; i++) {
+			for (int i = 0; i < mat.length; i++) {
 
 				if (voisins(i).size() % 2 == 1) oddCpt++;
 			}
@@ -246,8 +246,35 @@ public class Graphe {
 	/**
 	 * @return vrai si le graphe est un arbre, faux sinon
 	 */
-	public boolean estUnArbre() {
+	public boolean estUnArbre() { //Fait par Quentin
 
-		throw new RuntimeException("Méthode non implémentée !");
+		ArrayList<Integer> classe = new ArrayList<>();
+		ArrayList<Integer> voisins = new ArrayList<>();
+
+		if (mat.length > 0) { //Au cas où la matrice du graphe est vide
+
+			classe.add(0);
+		}
+
+		if (nbCC() == 1) { //Si le graphe est connexe
+
+			for (Integer sommet: classe) {
+
+				voisins.addAll(voisins(sommet)); //On ajoute les nouveaux voisins du sommet
+				voisins.remove(sommet); //On enlève le dernier sommet traité
+
+				for (int i = 0; i < voisins.size(); i++) { //On regarde tous les sommets
+
+					if (classe.contains(voisins.get(i))) { //Si ce sommet voisin est déjà dans classe
+
+						return false;
+					}
+				}
+				classe.addAll(voisins);
+			}
+		}
+		else return false;
+
+		return true;
 	}
 }
