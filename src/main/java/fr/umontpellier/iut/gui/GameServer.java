@@ -1,14 +1,10 @@
-package fr.umontpellier.iut.gui;
-
+package src.main.java.fr.umontpellier.iut.gui;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
-
 import javax.websocket.DeploymentException;
 import javax.websocket.Session;
-
 import org.glassfish.tyrus.server.Server;
-
 import fr.umontpellier.iut.rails.Jeu;
 
 public class GameServer {

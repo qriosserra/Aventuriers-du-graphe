@@ -25,6 +25,11 @@ public class Graphe {
 		}
 	}
 
+	public Graphe(int[][] mat) { //Fait par Quentin (pour estUnIsthme())
+
+		this.mat = mat;
+	}
+
 	/**
 	 * @return le nombre de sommets
 	 */
@@ -87,13 +92,13 @@ public class Graphe {
 	 * @param v un entier représentant un sommet du graphe
 	 * @return la liste des sommets voisins de v
 	 */
-	public ArrayList<Integer> voisins(int v) {  //Fait par Quentin
+	public ArrayList<Integer> voisins(int v) { //Fait par Quentin
 
 		ArrayList<Integer> voisins = new ArrayList<>();
 
 		for (int i = 0; i < mat.length; i++) {
 
-			//on parcourt la ligne v du tableau, et on rajoute la colonne i quand on croise une valeur supérieur à 0
+			//On parcourt la ligne v du tableau, rajoutant la colonne i quand on croise une valeur supérieur à 0
 			if (mat[v][i] > 0) voisins.add(i);
 		}
 		return voisins;
@@ -123,8 +128,8 @@ public class Graphe {
 	public ArrayList<Integer> calculerClasseDeConnexite(int v) { //Fait par Quentin
 
 		int sommet; //Sommet qui sera traité dans la boucle
-		ArrayList<Integer> classe = new ArrayList<>();   //Classe de connexitté à retourner
-		ArrayList<Integer> bleu = new ArrayList<>();    //Liste des sommets dont on a pas encore calculé les voisins
+		ArrayList<Integer> classe = new ArrayList<>(); //Classe de connexitté à retourner
+		ArrayList<Integer> bleu = new ArrayList<>(); //Liste des sommets dont on a pas encore calculé les voisins
 		bleu.add(v);
 
 		while (!bleu.isEmpty()) {
@@ -141,25 +146,33 @@ public class Graphe {
 	 */
 	public ArrayList<ArrayList<Integer>> calculerClassesDeConnexite() { //Fait par Quentin
 
-		ArrayList<ArrayList<Integer>> classes = new ArrayList<>();  //Liste de classe de connexité à retourner
-		ArrayList<Integer> classeBleue = new ArrayList<>();         //Classe de connexité du graphe qui sera comparée dans la boucle
+		ArrayList<ArrayList<Integer>> classes = new ArrayList<>(); //Liste de classe de connexité à retourner
 
-		if (mat.length > 0) {   //Au cas où la matrice du graphe est vide
+		if (mat.length > 0) { //Au cas où la matrice du graphe est vide
 
-			classes.get(0).addAll(calculerClasseDeConnexite(0));
+			classes.add(new ArrayList<>(calculerClasseDeConnexite(0)));
 		}
 
-		for (int i = 0; i < classes.size(); i++) {
+		for (int sommet = 1; sommet < mat.length; sommet++) { //Commence à 1 car la classe de 0 est déjà dans classes
 
-			for (int sommet = 1; sommet < mat.length; sommet++) {   //Commence à 1 car la classe de 0 est déjà dans classes
+			if (!estContenu(classes, sommet)) {
 
-				if (!classes.get(i).contains((sommet))) {    //Si classes ne contient pas déjà le sommet
-
-					classes.get(i).addAll(calculerClasseDeConnexite(sommet));
-				}
+				classes.add(new ArrayList<>(calculerClasseDeConnexite(sommet))); //Ajoute la classe de connexité
 			}
 		}
 		return classes;
+	}
+
+	public boolean estContenu(ArrayList<ArrayList<Integer>> classes, int sommet) { //Fait par Quentin (pour calculerClassesDeConnexite())
+
+		for (int i = 0; i < classes.size(); i++) { //On test toutes les classes existant pour le moment
+
+			if (classes.get(i).contains((sommet))) { //Si la classe[i] contient le sommet
+
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -174,9 +187,27 @@ public class Graphe {
 	 * @param v un entie représentant un sommet
 	 * @return vrai si (u,v) est un isthme, faux sinon
 	 */
-	public boolean estUnIsthme(int u, int v) {
+	public boolean estUnIsthme(int u, int v) { //Fait par Quentin
 
-		throw new RuntimeException("Méthode non implémentée !");
+		Graphe copy = new Graphe(copy());
+
+		copy.supprimerArete(u, v);
+
+		return copy.nbCC() > this.nbCC(); //Si l'arrête supprimée a créer une nouvelle classe de connexité
+	}
+
+	public int[][] copy() { //Fait par Quentin (pour Graphe(int[][] mat))
+
+		int[][] mat = new int[this.mat.length][this.mat.length];
+
+		for (int i = 0; i < mat.length; i++) {
+
+			for (int j = 0; j < mat.length; j++) {
+
+				mat[i][j] = this.mat[i][j];
+			}
+		}
+		return mat;
 	}
 
 
@@ -192,11 +223,24 @@ public class Graphe {
 
 
 	/**
+	 * Ajout de Quentin:
+	 * <p>D'après le théorème d'Euler : Un graphe connexe admet une chaîne eulérienne si et seulement s'il possède zéro ou deux sommet(s) de degré impair. Un graphe connexe admet un cycle eulérien si et seulement s'il ne possède que des sommets de degré pair.
 	 * @return vrai s'il existe un parcours eulérien dans le graphe, faux sinon
 	 */
-	public boolean existeParcoursEulerien() {
+	public boolean existeParcoursEulerien() { //Fait par Quentin (je suis pas trop sûr)
 
-		throw new RuntimeException("Méthode non implémentée !");
+		int oddCpt = 0; //Compte le nombre de sommet d'ordre impair, retourne vrai seulement si oddCpt ⊆ {0,2}
+
+		if (nbCC() == 1) {
+
+			for (int i = 1; i < mat.length; i++) {
+
+				if (voisins(i).size() % 2 == 1) oddCpt++;
+			}
+		}
+		else return false;
+
+		return oddCpt == 0 || oddCpt == 2;
 	}
 
 	/**
