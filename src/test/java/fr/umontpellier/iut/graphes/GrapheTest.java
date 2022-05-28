@@ -22,7 +22,7 @@ public class GrapheTest {
 
     @Test
     void testCCdeV() {
-        Graphe g = buildGraphe(4,new int[][]{{0,1,1},{2,3,1}});
+        Graphe g = buildGraphe(4, new int[][]{{0,1,1},{2,3,1}});
         ArrayList<Integer> res = g.calculerClasseDeConnexite(2);
         //conversion en set pour que le equals ci-dessous soit bien une égalité de set et pas une égalité d'arrayList (qui tiendrait compte de l'ordre)
         HashSet<Integer> resSet = new HashSet<>(res);
@@ -36,7 +36,7 @@ public class GrapheTest {
 
     @Test
     void testCC() {
-        Graphe g = buildGraphe(4,new int[][]{{0,1,1},{2,3,1}});
+        Graphe g = buildGraphe(4, new int[][]{{0,1,1},{2,3,1}});
         ArrayList<ArrayList<Integer>> res = g.calculerClassesDeConnexite();
         //conversion en set pour que le equals ci-dessous soit bien une égalité de set et pas une égalité d'arrayList (qui tiendrait compte de l'ordre)
         HashSet<HashSet<Integer>> resSet = new HashSet<>();
@@ -62,21 +62,40 @@ public class GrapheTest {
 
     @Test
     void testCCPlusDur() {
-        Graphe g = buildGraphe(4,new int[][]{{2,3,1},{2,1,1},{1,3,1}});
+        Graphe g = buildGraphe(4, new int[][]{{2,3,1},{2,1,1},{1,3,1}});
         ArrayList<ArrayList<Integer>> res = g.calculerClassesDeConnexite();
         System.out.println(res);
     }
 
     @Test
     void testEstUnIsthme() {
-        Graphe g = buildGraphe(4,new int[][]{{0,1,1},{2,3,1},{2,1,1},{1,3,1}});
+        Graphe g = buildGraphe(4, new int[][]{{0,1,1},{2,3,1},{2,1,1},{1,3,1}});
         assertTrue(g.estUnIsthme(0,1));
         assertFalse(g.estUnIsthme(1,3));
     }
 
     @Test
+    void testEstUnIsthme2() {
+
+        Graphe g = buildGraphe( 13, new int[][]{{0,1,1},{1,2,1},{2,3,1},{2,4,1},{2,8,1},{4,5,1},{5,6,1},{5,7,1},{8,9,1},{8,10,1},{8,11,1},{11,12,1}});
+        assertTrue(g.estUnIsthme(0, 1));
+        assertTrue(g.estUnIsthme(1, 2));
+        assertTrue(g.estUnIsthme(2, 3));
+        assertTrue(g.estUnIsthme(2, 4));
+        assertTrue(g.estUnIsthme(2, 8));
+        assertTrue(g.estUnIsthme(4, 5));
+        assertTrue(g.estUnIsthme(5, 6));
+        assertTrue(g.estUnIsthme(5, 7));
+        assertTrue(g.estUnIsthme(8, 9));
+        assertTrue(g.estUnIsthme(8, 10));
+        assertTrue(g.estUnIsthme(8, 11));
+        assertTrue(g.estUnIsthme(11, 12));
+
+    }
+
+    @Test
     void testPlusLongChemin() {
-        Graphe g = buildGraphe(5,new int[][]{{3,4,1},{4,1,1},{0,1,1},{2,3,1},{2,1,1},{1,3,1}});
+        Graphe g = buildGraphe(5, new int[][]{{3,4,1},{4,1,1},{0,1,1},{2,3,1},{2,1,1},{1,3,1}});
 
         ArrayList<Integer> L = new ArrayList<Integer>();
         L.add(0);
@@ -91,7 +110,7 @@ public class GrapheTest {
 
     @Test
     void testExisteParcoursEulerien() {
-        Graphe g = buildGraphe(5,new int[][]{{0,1,1},{1,2,1},{2,0,1},{1,3,1},{2,4,1}});
+        Graphe g = buildGraphe(5, new int[][]{{0,1,1},{1,2,1},{2,0,1},{1,3,1},{2,4,1}});
 
         assertFalse(g.existeParcoursEulerien());
     }
@@ -100,5 +119,19 @@ public class GrapheTest {
     void testEstUnArbre() {
         Graphe g = buildGraphe( 13, new int[][]{{0,1,1},{1,2,1},{2,3,1},{2,4,1},{2,8,1},{4,5,1},{5,6,1},{5,7,1},{8,9,1},{8,10,1},{8,11,1},{11,12,1}});
         assertTrue(g.estUnArbre());
+    }
+
+    @Test
+    void testEstUnArbre2() {
+
+        Graphe g = buildGraphe( 7, new int[][]{{0,1,1},{0,2,1},{1,3,1},{1,4,1},{2,5,1},{4,6,1},{5,6,1}});
+        assertFalse(g.estUnArbre());
+    }
+
+    @Test
+    void testEstUnArbre3() {
+
+        Graphe g = buildGraphe( 3, new int[][]{{0,1,1},{0,2,1},{1,2,1}});
+        assertFalse(g.estUnArbre());
     }
 }

@@ -252,7 +252,7 @@ public class Graphe {
 		return nbCC() == 1 && nbAretes() == nbSommets() - 1; //Graphe connexe et longueur de n-1
 	}
 	/*
-	public boolean estUnArbre() { //Fait par Quentin (ça doit marcher mais je suis partie trop loin je crois)
+	public boolean estUnArbre() { //Fait par Quentin (je suis partie trop loin je crois)
 
 		ArrayList<Integer> classe = new ArrayList<>();
 		ArrayList<Integer> voisins = new ArrayList<>();
