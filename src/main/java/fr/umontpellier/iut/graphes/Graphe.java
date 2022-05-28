@@ -1,4 +1,6 @@
-package src.main.java.fr.umontpellier.iut.graphes;
+//package src.main.java.fr.umontpellier.iut.graphes;
+package fr.umontpellier.iut.graphes;
+
 import java.util.ArrayList;
 
 public class Graphe {
@@ -136,6 +138,7 @@ public class Graphe {
 
 			sommet = bleu.remove(0);
 			bleu.addAll(voisins(sommet));
+			bleu.removeAll(classe);
 			classe.add(sommet);
 		}
 		return classe;

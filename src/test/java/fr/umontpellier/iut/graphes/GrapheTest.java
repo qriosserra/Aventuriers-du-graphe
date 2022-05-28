@@ -1,10 +1,9 @@
-package src.test.java.fr.umontpellier.iut.graphes;
-import org.junit.jupiter.api.Test;
-import src.main.java.fr.umontpellier.iut.graphes.Graphe;
+//package src.test.java.fr.umontpellier.iut.graphes;
+package fr.umontpellier.iut.graphes;
 
+import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.HashSet;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 public class GrapheTest {

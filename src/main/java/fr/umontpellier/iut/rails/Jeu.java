@@ -1,8 +1,6 @@
 package fr.umontpellier.iut.rails;
-
 import com.google.gson.Gson;
 import fr.umontpellier.iut.gui.GameServer;
-
 import java.util.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
