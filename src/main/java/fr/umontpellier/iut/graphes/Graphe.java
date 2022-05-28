@@ -210,7 +210,6 @@ public class Graphe {
 		return mat;
 	}
 
-
 	/**
 	 * Calcule le plus long chemin présent dans le graphe
 	 *
@@ -220,7 +219,6 @@ public class Graphe {
 
 		throw new RuntimeException("Méthode non implémentée !");
 	}
-
 
 	/**
 	 * Ajout de Quentin:
@@ -248,6 +246,11 @@ public class Graphe {
 	 */
 	public boolean estUnArbre() { //Fait par Quentin
 
+		return nbCC() == 1 && nbAretes() == nbSommets() - 1; //Graphe connexe et longueur de n-1
+	}
+	/*
+	public boolean estUnArbre() { //Fait par Quentin (ça doit marcher mais je suis partie trop loin je crois)
+
 		ArrayList<Integer> classe = new ArrayList<>();
 		ArrayList<Integer> voisins = new ArrayList<>();
 
@@ -263,7 +266,7 @@ public class Graphe {
 				voisins.addAll(voisins(sommet)); //On ajoute les nouveaux voisins du sommet
 				voisins.remove(sommet); //On enlève le dernier sommet traité
 
-				for (int i = 0; i < voisins.size(); i++) { //On regarde tous les sommets
+				for (int i = 0; i < voisins.size(); i++) { //On regarde tous les sommets voisins
 
 					if (classe.contains(voisins.get(i))) { //Si ce sommet voisin est déjà dans classe
 
@@ -277,4 +280,5 @@ public class Graphe {
 
 		return true;
 	}
+	*/
 }
