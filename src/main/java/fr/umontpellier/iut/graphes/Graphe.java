@@ -1,6 +1,4 @@
-//package src.main.java.fr.umontpellier.iut.graphes;
 package fr.umontpellier.iut.graphes;
-
 import java.util.ArrayList;
 
 public class Graphe {
@@ -100,7 +98,7 @@ public class Graphe {
 
 		for (int i = 0; i < mat.length; i++) {
 
-			//On parcourt la ligne v du tableau, rajoutant la colonne i quand on croise une valeur supérieur à 0
+			//On parcours la ligne v du tableau, rajoutant la colonne i quand on croise une valeur supérieur à 0
 			if (existeArete(v, i)) voisins.add(i);
 		}
 		return voisins;
@@ -147,13 +145,17 @@ public class Graphe {
 	/**
 	 * @return la liste des classes de connexité du graphe
 	 */
-	public ArrayList<ArrayList<Integer>> calculerClassesDeConnexite() { //Fait par Quentin
+	public ArrayList<ArrayList<Integer>> calculerClassesDeConnexite() throws IndexOutOfBoundsException { //Fait par Quentin
 
 		ArrayList<ArrayList<Integer>> classes = new ArrayList<>(); //Liste de classe de connexité à retourner
 
-		if (mat.length > 0) { //Au cas où la matrice du graphe est vide
+		try { //Au cas où la matrice du graphe est vide
 
 			classes.add(new ArrayList<>(calculerClasseDeConnexite(0)));
+		}
+		catch (IndexOutOfBoundsException e) {
+
+			throw new IndexOutOfBoundsException("Le graphe ne comporte pas de sommet");
 		}
 
 		for (int sommet = 1; sommet < mat.length; sommet++) { //Commence à 1 car la classe de 0 est déjà dans classes
@@ -218,9 +220,52 @@ public class Graphe {
 	 *
 	 * @return une liste de sommets formant le plus long chemin dans le graphe
 	 */
-	public ArrayList<Integer> plusLongChemin() {
+	public ArrayList<Integer> plusLongChemin() throws IndexOutOfBoundsException {
 
-		throw new RuntimeException("Méthode non implémentée !");
+		ArrayList<ArrayList<Integer>> chemins = new ArrayList<>();
+		ArrayList<Integer> voisins;
+		ArrayList<Integer> biggestClasse = new ArrayList<>();
+		int sommet = 0;
+		int i = 0;
+
+		try { //Au cas où la matrice du graphe est vide
+
+			biggestClasse.addAll(calculerClasseDeConnexite(0));
+		}
+		catch (IndexOutOfBoundsException e) {
+
+			throw new IndexOutOfBoundsException("Le graphe ne comporte pas de sommet");
+		}
+
+		if (existeParcoursEulerien()) { //Si c'est un parcours Eulerien, alors on peut passer par toutes les arêtes du graphe
+
+			for (int j = 0; j < mat.length; j++) { //Parcours tous les sommets du graphe
+
+				if (voisins(j).size() == 1) sommet = j; //Si on trouve un sommet de degré 1, on doit commencer par celui-ci
+			}
+			while (chemins.get(i).size() != nbAretes()) {
+
+				voisins = voisins(sommet);
+				voisins.remove(sommet);
+				sommet = voisins.get(0);
+
+				chemins.get(0).add(voisins.get(0));
+
+				i++;
+			}
+			return chemins.get(chemins.size() - 1);
+		}
+		else { //Sinon on va trouver la plus grosse classe de connexité du graphe
+
+			for (int j = 1; j < nbCC(); j++) { //Commence à 1 car la classe de connexité du sommet 0 est déjà dans biggestClasse
+
+				if (biggestClasse.size() < calculerClassesDeConnexite().get(j).size()) { //Si la taille de la classe actuelle est plus grande que l'ancienne
+
+					biggestClasse = calculerClassesDeConnexite().get(j); //Mettre la classe de connexité actuelle dans biggestClasse
+				}
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -251,37 +296,4 @@ public class Graphe {
 
 		return nbCC() == 1 && nbAretes() == nbSommets() - 1; //Graphe connexe et longueur de n-1
 	}
-	/*
-	public boolean estUnArbre() { //Fait par Quentin (je suis partie trop loin je crois)
-
-		ArrayList<Integer> classe = new ArrayList<>();
-		ArrayList<Integer> voisins = new ArrayList<>();
-
-		if (mat.length > 0) { //Au cas où la matrice du graphe est vide
-
-			classe.add(0);
-		}
-
-		if (nbCC() == 1) { //Si le graphe est connexe
-
-			for (Integer sommet: classe) {
-
-				voisins.addAll(voisins(sommet)); //On ajoute les nouveaux voisins du sommet
-				voisins.remove(sommet); //On enlève le dernier sommet traité
-
-				for (int i = 0; i < voisins.size(); i++) { //On regarde tous les sommets voisins
-
-					if (classe.contains(voisins.get(i))) { //Si ce sommet voisin est déjà dans classe
-
-						return false;
-					}
-				}
-				classe.addAll(voisins);
-			}
-		}
-		else return false;
-
-		return true;
-	}
-	*/
 }
