@@ -1,5 +1,6 @@
 package fr.umontpellier.iut.graphes;
 import java.util.ArrayList;
+import java.util.SortedSet;
 
 public class Graphe {
 	/**
@@ -194,11 +195,11 @@ public class Graphe {
 	 */
 	public boolean estUnIsthme(int u, int v) { //Fait par Quentin
 
-		Graphe copy = new Graphe(copy());
+		Graphe graphe = new Graphe(copy());
 
-		copy.supprimerArete(u, v);
+		graphe.supprimerArete(u, v);
 
-		return copy.nbCC() > this.nbCC(); //Si l'arête supprimée a créé une nouvelle classe de connexité
+		return graphe.nbCC() > this.nbCC(); //Si l'arête supprimée a créé une nouvelle classe de connexité
 	}
 
 	public int[][] copy() { //Fait par Quentin (pour Graphe(int[][] mat))
@@ -217,16 +218,16 @@ public class Graphe {
 
 	/**
 	 * Calcule le plus long chemin présent dans le graphe
-	 *
 	 * @return une liste de sommets formant le plus long chemin dans le graphe
 	 */
 	public ArrayList<Integer> plusLongChemin() throws IndexOutOfBoundsException {
 
+		Graphe graphe;
 		ArrayList<ArrayList<Integer>> chemins = new ArrayList<>();
 		ArrayList<Integer> voisins;
 		ArrayList<Integer> biggestClasse = new ArrayList<>();
 		int sommet = 0;
-		int i = 0;
+		int precedent;
 
 		try { //Au cas où la matrice du graphe est vide
 
@@ -239,32 +240,53 @@ public class Graphe {
 
 		if (existeParcoursEulerien()) { //Si c'est un parcours Eulerien, alors on peut passer par toutes les arêtes du graphe
 
-			for (int j = 0; j < mat.length; j++) { //Parcours tous les sommets du graphe
+			for (int i = 0; i < mat.length; i++) { //Parcours tous les sommets du graphe
 
-				if (voisins(j).size() == 1) sommet = j; //Si on trouve un sommet de degré 1, on doit commencer par celui-ci
+				if (voisins(i).size() == 1) { //Si on trouve un sommet de degré 1, on doit commencer par celui-ci, sinon le sommet 0
+
+					sommet = i;
+					break;
+				}
 			}
-			while (chemins.get(i).size() != nbAretes()) {
+			do {
 
-				voisins = voisins(sommet);
-				voisins.remove(sommet);
-				sommet = voisins.get(0);
+				graphe = new Graphe(copy());
+				chemins.add(new ArrayList<>());
+				for (int i = 0; i < nbAretes(); i++) {
 
-				chemins.get(0).add(voisins.get(0));
+					voisins = voisins(sommet); //On génère les voisins du sommet
+					if (voisins.isEmpty()) break; //S'il n'y a pas de voisins, on refait un nouveau chemin
+					sommet = voisins.get(0); //Il faut regarder que le prochain
 
-				i++;
+					precedent = chemins.get(chemins.size() - 1).get(chemins.size() - 1);
+					graphe.supprimerArete(precedent, sommet);
+					chemins.get(chemins.size() - 1).add(sommet);
+				}
 			}
+			while (chemins.get(chemins.size() - 1).size() != nbAretes()) ;
 			return chemins.get(chemins.size() - 1);
 		}
 		else { //Sinon on va trouver la plus grosse classe de connexité du graphe
 
-			for (int j = 1; j < nbCC(); j++) { //Commence à 1 car la classe de connexité du sommet 0 est déjà dans biggestClasse
+			for (int i = 1; i < nbCC(); i++) { //Commence à 1 car la classe de connexité du sommet 0 est déjà dans biggestClasse
 
-				if (biggestClasse.size() < calculerClassesDeConnexite().get(j).size()) { //Si la taille de la classe actuelle est plus grande que l'ancienne
+				if (biggestClasse.size() < calculerClassesDeConnexite().get(i).size()) { //Si la taille de la classe actuelle est plus grande que l'ancienne
 
-					biggestClasse = calculerClassesDeConnexite().get(j); //Mettre la classe de connexité actuelle dans biggestClasse
+					biggestClasse = calculerClassesDeConnexite().get(i); //Mettre la classe de connexité actuelle dans biggestClasse
 				}
 			}
 		}
+		return null;
+	}
+
+	public ArrayList<Integer> wrongPath(ArrayList<ArrayList<Integer>> p_chemins) {
+
+		ArrayList<ArrayList<Integer>> chemins = new ArrayList<>(p_chemins);
+		ArrayList<Integer> chemin = new ArrayList<>(chemins.get(chemins.size() - 1));
+
+
+
+		//for ()
 		return null;
 	}
 
