@@ -1,4 +1,5 @@
 package fr.umontpellier.iut.graphes;
+import javax.xml.validation.SchemaFactoryLoader;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -220,8 +221,9 @@ public class Graphe {
 			if (chemins.isEmpty()) {
 
 				chemins.add(new ArrayList<>());
+				chemins.get(0).add(sommet);
 			}
-			chemins.get(0).add(0, sommet);
+
 			voisins = graphe.voisins(sommet);
 
 			if (chemins.get(0).size() > 1) {
@@ -236,9 +238,9 @@ public class Graphe {
 			else {
 				chemins.add(0, chemins.get(0));
 				voisins = graphe.voisins(chemins.get(0).get(1));
-				graphe.ajouterArete(chemins.get(0).get(1), chemins.get(0).get(0), 1);
-				voisins.remove(chemins.get(0).remove(0));
+				graphe.ajouterArete(chemins.get(0).get(1), chemins.get(0).remove(0), 1);
 			}
+			chemins.get(0).add(0, sommet);
 		}
 		while (chemins.get(0).size() != 1 || !voisins.isEmpty()) ;
 		for (int i = 0; i < chemins.size(); i++) {
