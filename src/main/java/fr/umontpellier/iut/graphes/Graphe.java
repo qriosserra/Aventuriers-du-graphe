@@ -247,9 +247,16 @@ public class Graphe {
 				sommet = voisins.get(0);
 			}
 		}
-		while (true) ;
-		//Collections.reverse(chemins.get(0));
-		//return chemins.get(0);
+		while (!voisins.isEmpty()) ;
+		for (int i = 0; i < chemins.size(); i++) {
+			
+			if (chemins.get(i).size() > chemins.get(0).size()) {
+				
+				chemins.set(0, chemins.get(i));
+			}
+		}
+		Collections.reverse(chemins.get(0));
+		return chemins.get(0);
 	}
 
 	/**
