@@ -199,55 +199,48 @@ public class Graphe {
 	public ArrayList<Integer> plusLongChemin() {
 		
 		ArrayList<ArrayList<Integer>> chemins = new ArrayList<>();
-		ArrayList<ArrayList<Integer>> classes = new ArrayList<>();
 		ArrayList<Integer> classe = new ArrayList<>();
 		ArrayList<Integer> voisins = new ArrayList<>();
-		Graphe graphe = null;
+		Graphe graphe = new Graphe(copy());
 		int sommet = 0;
 
-		if (mat.length > 0) { //Au cas où la matrice du graphe est vide
+		for (ArrayList<Integer> list : calculerClassesDeConnexite()) {
 
-			classes.addAll(calculerClassesDeConnexite());
-			for (int i = 0; i < nbCC(); i++) {
-				
-				if (classes.get(i).size() > classe.size()) {
-					
-					classe = classes.get(i);
-				}
-			}
-			for (int i = 0; i < classe.size(); i++) {
-				
-				if (voisins(classe.get(i)).size() % 2 == 1) {
-					
-					sommet = i;
-					break;
-				}
+			if (list.size() > classe.size()) classe = list;
+		}
+		for (Integer i : classe) {
+
+			if (voisins(i).size() % 2 == 1) {
+
+				sommet = i;
+				break;
 			}
 		}
 		do {
-			if (voisins.isEmpty()) {
-				
-				graphe = new Graphe(copy());
-				chemins.add(0, new ArrayList<>());
-				sommet = 0;
-				//if (!chemins.get(0).isEmpty()) {
-				//
-				//	sommet = chemins.get(0).get(chemins.get(0).size() -1);
-				//}
+			if (chemins.isEmpty()) {
+
+				chemins.add(new ArrayList<>());
 			}
-			voisins = graphe.voisins(sommet);
 			chemins.get(0).add(0, sommet);
-			if (chemins.size() > 1 && chemins.get(0).size() == chemins.get(1).size() - 1) {
-				
-				voisins.remove(chemins.get(1).get(0));
+			voisins = graphe.voisins(sommet);
+
+			if (chemins.get(0).size() > 1) {
+
+				voisins.remove(chemins.get(0).get(1));
 			}
 			if (!voisins.isEmpty()) {
-				
-				graphe.supprimerArete(voisins.get(0), sommet);
+
+				graphe.supprimerArete(sommet, voisins.get(0));
 				sommet = voisins.get(0);
 			}
+			else {
+				chemins.add(0, chemins.get(0));
+				voisins = graphe.voisins(chemins.get(0).get(1));
+				graphe.ajouterArete(chemins.get(0).get(1), chemins.get(0).get(0), 1);
+				voisins.remove(chemins.get(0).remove(0));
+			}
 		}
-		while (!voisins.isEmpty()) ;
+		while (chemins.get(0).size() != 1 || !voisins.isEmpty()) ;
 		for (int i = 0; i < chemins.size(); i++) {
 			
 			if (chemins.get(i).size() > chemins.get(0).size()) {

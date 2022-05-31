@@ -105,7 +105,7 @@ public class GrapheTest {
         L.add(1);
         L.add(4);
         L.add(3);
-        assertEquals(g.plusLongChemin(),L);
+        assertEquals(L, g.plusLongChemin());
     }
 
     @Test
