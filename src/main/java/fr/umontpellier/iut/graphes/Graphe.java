@@ -1,6 +1,6 @@
 package fr.umontpellier.iut.graphes;
 import java.util.ArrayList;
-import java.util.SortedSet;
+import java.util.Collections;
 
 public class Graphe {
 	/**
@@ -11,7 +11,6 @@ public class Graphe {
 
 	/**
 	 * Construit un graphe à n sommets
-	 *
 	 * @param n le nombre de sommets du graphe
 	 */
 	public Graphe(int n) {
@@ -40,13 +39,13 @@ public class Graphe {
 
 	/**
 	 * Supprime l'arête entre les sommets i et j
-	 *
 	 * @param i un entier représentant un sommet
 	 * @param j un autre entier représentant un sommet
 	 */
-	public void supprimerArete(int i, int j) {
+	public Graphe supprimerArete(int i, int j) {
 		mat[i][j] = 0;
 		mat[j][i] = 0;
+		return this;
 	}
 
 	/**
@@ -55,7 +54,6 @@ public class Graphe {
 	 * @param k la distance entre i et j (k>0)
 	 */
 	public void ajouterArete(int i, int j, int k) {
-
 		mat[i][j] = k;
 		mat[j][i] = k;
 	}
@@ -100,7 +98,7 @@ public class Graphe {
 		for (int i = 0; i < mat.length; i++) {
 
 			//On parcours la ligne v du tableau, rajoutant la colonne i quand on croise une valeur supérieur à 0
-			if (existeArete(v, i)) voisins.add(i);
+			if (existeArete(v, i) && v != i) voisins.add(i);
 		}
 		return voisins;
 	}
@@ -122,11 +120,10 @@ public class Graphe {
 
 	/**
 	 * Calcule la classe de connexité du sommet v
-	 *
 	 * @param v un entier représentant un sommet
 	 * @return une liste d'entiers représentant les sommets de la classe de connexité de v
 	 */
-	public ArrayList<Integer> calculerClasseDeConnexite(int v) { //Fait par Quentin
+	public ArrayList<Integer> calculerClasseDeConnexite(int v) {
 
 		int sommet; //Sommet qui sera traité dans la boucle
 		ArrayList<Integer> classe = new ArrayList<>(); //Classe de connexitté à retourner
@@ -136,9 +133,9 @@ public class Graphe {
 		while (!bleu.isEmpty()) {
 
 			sommet = bleu.remove(0);
+			classe.add(sommet);
 			bleu.addAll(voisins(sommet));
 			bleu.removeAll(classe);
-			classe.add(sommet);
 		}
 		return classe;
 	}
@@ -146,39 +143,29 @@ public class Graphe {
 	/**
 	 * @return la liste des classes de connexité du graphe
 	 */
-	public ArrayList<ArrayList<Integer>> calculerClassesDeConnexite() throws IndexOutOfBoundsException { //Fait par Quentin
+	public ArrayList<ArrayList<Integer>> calculerClassesDeConnexite() {
 
+		boolean contains;
 		ArrayList<ArrayList<Integer>> classes = new ArrayList<>(); //Liste de classe de connexité à retourner
 
-		try { //Au cas où la matrice du graphe est vide
-
-			classes.add(new ArrayList<>(calculerClasseDeConnexite(0)));
-		}
-		catch (IndexOutOfBoundsException e) {
-
-			throw new IndexOutOfBoundsException("Le graphe ne comporte pas de sommet");
-		}
-
+		if (mat.length > 0) classes.add(calculerClasseDeConnexite(0));
+		
+		contains = false;
 		for (int sommet = 1; sommet < mat.length; sommet++) { //Commence à 1 car la classe de 0 est déjà dans classes
+			
+			for (int i = 0; i < classes.size() && !contains; i++) { //On test toutes les classes existantes pour le moment
+				
+				if (classes.get(i).contains((sommet))) { //Si la classe[i] contient le sommet
+					
+					contains = true;
+				}
+			}
+			if (!contains) {
 
-			if (!estContenu(classes, sommet)) {
-
-				classes.add(new ArrayList<>(calculerClasseDeConnexite(sommet))); //Ajoute la classe de connexité
+				classes.add(calculerClasseDeConnexite(sommet)); //Ajoute la classe de connexité
 			}
 		}
 		return classes;
-	}
-
-	public boolean estContenu(ArrayList<ArrayList<Integer>> classes, int sommet) { //Fait par Quentin (pour calculerClassesDeConnexite())
-
-		for (int i = 0; i < classes.size(); i++) { //On test toutes les classes existant pour le moment
-
-			if (classes.get(i).contains((sommet))) { //Si la classe[i] contient le sommet
-
-				return true;
-			}
-		}
-		return false;
 	}
 
 	/**
@@ -193,26 +180,15 @@ public class Graphe {
 	 * @param v un entie représentant un sommet
 	 * @return vrai si (u,v) est un isthme, faux sinon
 	 */
-	public boolean estUnIsthme(int u, int v) { //Fait par Quentin
-
-		Graphe graphe = new Graphe(copy());
-
-		graphe.supprimerArete(u, v);
-
-		return graphe.nbCC() > this.nbCC(); //Si l'arête supprimée a créé une nouvelle classe de connexité
+	public boolean estUnIsthme(int u, int v) {
+		
+		return new Graphe(copy()).supprimerArete(u, v).nbCC() > nbCC();
 	}
 
-	public int[][] copy() { //Fait par Quentin (pour Graphe(int[][] mat))
+	public int[][] copy() {
 
 		int[][] mat = new int[this.mat.length][this.mat.length];
-
-		for (int i = 0; i < mat.length; i++) {
-
-			for (int j = 0; j < mat.length; j++) {
-
-				mat[i][j] = this.mat[i][j];
-			}
-		}
+		for (int i = 0; i < mat.length; i++) System.arraycopy(this.mat[i], 0, mat[i], 0, mat.length);
 		return mat;
 	}
 
@@ -220,74 +196,60 @@ public class Graphe {
 	 * Calcule le plus long chemin présent dans le graphe
 	 * @return une liste de sommets formant le plus long chemin dans le graphe
 	 */
-	public ArrayList<Integer> plusLongChemin() throws IndexOutOfBoundsException {
-
-		Graphe graphe;
+	public ArrayList<Integer> plusLongChemin() {
+		
 		ArrayList<ArrayList<Integer>> chemins = new ArrayList<>();
-		ArrayList<Integer> voisins;
-		ArrayList<Integer> biggestClasse = new ArrayList<>();
+		ArrayList<ArrayList<Integer>> classes = new ArrayList<>();
+		ArrayList<Integer> classe = new ArrayList<>();
+		ArrayList<Integer> voisins = new ArrayList<>();
+		Graphe graphe = null;
 		int sommet = 0;
-		int precedent;
 
-		try { //Au cas où la matrice du graphe est vide
+		if (mat.length > 0) { //Au cas où la matrice du graphe est vide
 
-			biggestClasse.addAll(calculerClasseDeConnexite(0));
-		}
-		catch (IndexOutOfBoundsException e) {
-
-			throw new IndexOutOfBoundsException("Le graphe ne comporte pas de sommet");
-		}
-
-		if (existeParcoursEulerien()) { //Si c'est un parcours Eulerien, alors on peut passer par toutes les arêtes du graphe
-
-			for (int i = 0; i < mat.length; i++) { //Parcours tous les sommets du graphe
-
-				if (voisins(i).size() == 1) { //Si on trouve un sommet de degré 1, on doit commencer par celui-ci, sinon le sommet 0
-
+			classes.addAll(calculerClassesDeConnexite());
+			for (int i = 0; i < nbCC(); i++) {
+				
+				if (classes.get(i).size() > classe.size()) {
+					
+					classe = classes.get(i);
+				}
+			}
+			for (int i = 0; i < classe.size(); i++) {
+				
+				if (voisins(classe.get(i)).size() % 2 == 1) {
+					
 					sommet = i;
 					break;
 				}
 			}
-			do {
-
+		}
+		do {
+			if (voisins.isEmpty()) {
+				
 				graphe = new Graphe(copy());
-				chemins.add(new ArrayList<>());
-				for (int i = 0; i < nbAretes(); i++) {
-
-					voisins = voisins(sommet); //On génère les voisins du sommet
-					if (voisins.isEmpty()) break; //S'il n'y a pas de voisins, on refait un nouveau chemin
-					sommet = voisins.get(0); //Il faut regarder que le prochain
-
-					precedent = chemins.get(chemins.size() - 1).get(chemins.size() - 1);
-					graphe.supprimerArete(precedent, sommet);
-					chemins.get(chemins.size() - 1).add(sommet);
-				}
+				chemins.add(0, new ArrayList<>());
+				sommet = 0;
+				//if (!chemins.get(0).isEmpty()) {
+				//
+				//	sommet = chemins.get(0).get(chemins.get(0).size() -1);
+				//}
 			}
-			while (chemins.get(chemins.size() - 1).size() != nbAretes()) ;
-			return chemins.get(chemins.size() - 1);
-		}
-		else { //Sinon on va trouver la plus grosse classe de connexité du graphe
-
-			for (int i = 1; i < nbCC(); i++) { //Commence à 1 car la classe de connexité du sommet 0 est déjà dans biggestClasse
-
-				if (biggestClasse.size() < calculerClassesDeConnexite().get(i).size()) { //Si la taille de la classe actuelle est plus grande que l'ancienne
-
-					biggestClasse = calculerClassesDeConnexite().get(i); //Mettre la classe de connexité actuelle dans biggestClasse
-				}
+			voisins = graphe.voisins(sommet);
+			chemins.get(0).add(0, sommet);
+			if (chemins.size() > 1 && chemins.get(0).size() == chemins.get(1).size() - 1) {
+				
+				voisins.remove(chemins.get(1).get(0));
+			}
+			if (!voisins.isEmpty()) {
+				
+				graphe.supprimerArete(voisins.get(0), sommet);
+				sommet = voisins.get(0);
 			}
 		}
-		return null;
-	}
-
-	public ArrayList<Integer> wrongPath(ArrayList<ArrayList<Integer>> p_chemins) {
-
-		ArrayList<ArrayList<Integer>> chemins = new ArrayList<>(p_chemins);
-		ArrayList<Integer> chemin = new ArrayList<>(chemins.get(chemins.size() - 1));
-
-
-
-		//for ()
-		return null;
+		while (true) ;
+		//Collections.reverse(chemins.get(0));
+		//return chemins.get(0);
 	}
 
 	/**
