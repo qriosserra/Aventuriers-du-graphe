@@ -202,7 +202,7 @@ public class Graphe {
 		
 		ArrayList<ArrayList<Integer>> chemins = new ArrayList<>();
 		ArrayList<Integer> classe = new ArrayList<>();
-		ArrayList<Integer> voisins;
+		ArrayList<Integer> voisins = new ArrayList<>();
 		Graphe graphe = new Graphe(copy());
 		chemins.add(new ArrayList<>());
 		int sommet = 0;
@@ -220,22 +220,24 @@ public class Graphe {
 			}
 		}
 		do {
-			
-			chemins.get(0).add(0, sommet);
-			voisins = graphe.voisins(sommet);
-			
+
 			if (!voisins.isEmpty()) {
 				
 				graphe.supprimerArete(sommet, voisins.get(0));
 				sommet = voisins.get(0);
 			}
-			else {
+			if (voisins.isEmpty() && !chemins.get(0).isEmpty()) {
 				
-				chemins.add(0, chemins.get(0));
-				chemins.get(0).remove(chemins.get(1).get(0));
-				voisins = graphe.voisins(chemins.get(0).get(1));
+				chemins.add(0, new ArrayList<>(chemins.get(0)));
+				graphe.ajouterArete(chemins.get(0).get(1), chemins.get(0).remove(0), 1);
+				voisins = graphe.voisins(chemins.get(0).get(0));
 				voisins.remove(chemins.get(1).get(0));
-				//graphe.ajouterArete(chemins.get(0).get(1), chemins.get(0).remove(0), 1);
+				sommet = chemins.get(0).get(0);
+			}
+			else {
+
+				chemins.get(0).add(0, sommet);
+				voisins = graphe.voisins(sommet);
 			}
 		}
 		while (chemins.get(0).size() != 1 || !voisins.isEmpty()) ;
