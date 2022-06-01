@@ -159,6 +159,7 @@ public class Graphe {
 				if (classes.get(i).contains((sommet))) { //Si la classe[i] contient le sommet
 					
 					contains = true;
+					break;
 				}
 			}
 			if (!contains) {
@@ -201,8 +202,9 @@ public class Graphe {
 		
 		ArrayList<ArrayList<Integer>> chemins = new ArrayList<>();
 		ArrayList<Integer> classe = new ArrayList<>();
-		ArrayList<Integer> voisins = new ArrayList<>();
+		ArrayList<Integer> voisins;
 		Graphe graphe = new Graphe(copy());
+		chemins.add(new ArrayList<>());
 		int sommet = 0;
 
 		for (ArrayList<Integer> list : calculerClassesDeConnexite()) {
@@ -218,29 +220,23 @@ public class Graphe {
 			}
 		}
 		do {
-			if (chemins.isEmpty()) {
-
-				chemins.add(new ArrayList<>());
-				chemins.get(0).add(sommet);
-			}
-
+			
+			chemins.get(0).add(0, sommet);
 			voisins = graphe.voisins(sommet);
-
-			if (chemins.get(0).size() > 1) {
-
-				voisins.remove(chemins.get(0).get(1));
-			}
+			
 			if (!voisins.isEmpty()) {
-
+				
 				graphe.supprimerArete(sommet, voisins.get(0));
 				sommet = voisins.get(0);
 			}
 			else {
+				
 				chemins.add(0, chemins.get(0));
+				chemins.get(0).remove(chemins.get(1).get(0));
 				voisins = graphe.voisins(chemins.get(0).get(1));
-				graphe.ajouterArete(chemins.get(0).get(1), chemins.get(0).remove(0), 1);
+				voisins.remove(chemins.get(1).get(0));
+				//graphe.ajouterArete(chemins.get(0).get(1), chemins.get(0).remove(0), 1);
 			}
-			chemins.get(0).add(0, sommet);
 		}
 		while (chemins.get(0).size() != 1 || !voisins.isEmpty()) ;
 		for (int i = 0; i < chemins.size(); i++) {
